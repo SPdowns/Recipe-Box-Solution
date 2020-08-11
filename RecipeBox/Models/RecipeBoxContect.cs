@@ -9,6 +9,6 @@ namespace RecipeBox.Models
     public DbSet<Recipe> Recipes { get; set; }
     public DbSet<CategoryItem> CategoryRecipe { get; set;}
 
-    public ToDoListMvcSqlEntityIdentityContext(DbContextOptions options) : base(options) { }
+    public RecipeBoxContext(DbContextOptions options) : base(options) { }
   }
 }
