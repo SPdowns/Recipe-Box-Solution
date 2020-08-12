@@ -42,7 +42,7 @@ namespace RecipeBox.Controllers
       _db.Recipes.Add(recipe);
       if (CategoryId != 0)
       {
-        _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId= CategoryId, RecipeId = recipe.RecipeId});
+        _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId = CategoryId, RecipeId = recipe.RecipeId});
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
