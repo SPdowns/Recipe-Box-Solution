@@ -33,5 +33,19 @@ namespace RecipeBox.Controllers
       ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
       return View();
     }
+    [HttpPost]
+    public async Task<ActionResult> Create(Recipe Recipe, int CategoryId)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      rescipe.User = currentUser;
+      _db.Recipe.Add(recipe);
+      if (CategoryId != 0)
+      {
+        _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId= CategoryId, RecipeId = recipe.RecipeId});
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index")
+    }
   }
 }
