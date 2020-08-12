@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace RecipeBox.Controllers
 {
   [Authorize]
-  public class RecipeController : Controllers
+  public class RecipeController : Controller
   {
-    private readonly RecipeBox _db;
+    private readonly RecipeBoxContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     public RecipeController(UserManager<ApplicationUser> userManager, RecipeBoxContext db)
     {
@@ -24,22 +24,22 @@ namespace RecipeBox.Controllers
     public async Task<ActionResult> Index()
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindIdAsync(userId);
+      var currentUser = await _userManager.FindByIdAsync(userId);
       var userRecipes  = _db.Recipes.Where(entry => entry.User.Id == currentUser.Id).RecipeBox();
       return View(userRecipes);
     }
-    public AcrtionResult Create()
+    public ActionResult Create()
     {
       ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
       return View();
     }
     [HttpPost]
-    public async Task<ActionResult> Create(Recipe Recipe, int CategoryId)
+    public async Task<ActionResult> Create(Recipe recipe, int CategoryId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      rescipe.User = currentUser;
-      _db.Recipe.Add(recipe);
+      recipe.User = currentUser;
+      _db.Recipes.Add(recipe);
       if (CategoryId != 0)
       {
         _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId= CategoryId, RecipeId = recipe.RecipeId});
@@ -51,13 +51,13 @@ namespace RecipeBox.Controllers
     {
       var thisRecipe = _db.Recipes
       .Include(recipe => recipe.Categories)
-      .ThenInlcude(join => join.Category)
-      .FirstOrDefult(recipe => recipe.RecipeId == id);
+      .ThenInclude(join => join.Category)
+      .FirstOrDefault(recipe => recipe.RecipeId == id);
       return View(thisRecipe);
     }
     public ActionResult Edit(int id)
     {
-      var thisRecipe = _db.Items.FirstOrDefult(recipe => recipe.RecipeId == id);
+      var thisRecipe = _db.Recipes.FirstOrDefault(recipe => recipe.RecipeId == id);
       ViewBag.CategoryId = SelectList(_db.Categories,"CategoryId", "Name");
       return View(thisRecipe);
     }

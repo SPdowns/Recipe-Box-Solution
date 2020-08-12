@@ -8,7 +8,6 @@ namespace RecipeBox.Models
     public Recipe()  
     {
       this.Categories = new HashSet<CategoryRecipe>();
-      IsComplete = false;
     }
     public int RecipeId { get; set; }
     public string Title { get; set; }

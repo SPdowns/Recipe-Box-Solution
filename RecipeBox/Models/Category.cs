@@ -4,9 +4,9 @@ namespace RecipeBox.Models
 {
   public class Category
   {
-    public Item()
+    public Category()
     {
-      this.Recipe = new HashSet<CategoryRecipe>();
+      this.Recipes = new HashSet<CategoryRecipe>();
     }
     public int CategoryId { get; set; }
     public string Name { get; set; }

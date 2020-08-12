@@ -7,7 +7,7 @@ namespace RecipeBox.Models
   {
     public virtual DbSet<Category> Categories { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
-    public DbSet<CategoryItem> CategoryRecipe { get; set;}
+    public DbSet<CategoryRecipe> CategoryRecipe { get; set;}
 
     public RecipeBoxContext(DbContextOptions options) : base(options) { }
   }

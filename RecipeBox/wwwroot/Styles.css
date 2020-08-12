@@ -1,0 +1,23 @@
+body {
+  background-image: url(https://images.pexels.com/photos/255501/pexels-photo-255501.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260);
+  background-position: center;
+  background-size: 2200px 1500px;
+  background-repeat: no-repeat;
+  background-color: black;
+  position: relative; 
+  color: black;
+  font-family: 'Merriweather', serif;
+}
+
+.container {
+  background-color: rgb(66, 65, 65);
+  color:  whitesmoke;
+  opacity: 90%;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  border-radius: 15px;
+  border-style: ridge;
+}
