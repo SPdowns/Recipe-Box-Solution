@@ -29,8 +29,12 @@ in the terminal
 * add a file called `appsetting.json` in the HairSalon directory.
 * in `appsetting.json` add ![appsetting.json](Assets/setup.png)
 * fill in your `server`, `port`,`database`,`uid`, and `pwd`
+* Make suere to have your `MySQLWorkbench` open
+* run 
+`dotnet ef migrations add Initial`
+then `dotnet ef database update`
 * if everything looks correct you should see this as the home page: 
-![Home-page](Assets/UniversityWebpage.png)
+![Home-page](Assets/HomePage.png)
 
 __
 

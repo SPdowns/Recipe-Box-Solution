@@ -30,7 +30,7 @@ namespace RecipeBox.Controllers
     }
     public ActionResult Create()
     {
-      // ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
       return View();
     }
     [HttpPost]
