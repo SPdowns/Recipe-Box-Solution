@@ -1,0 +1,37 @@
+@{
+  Layout = "_Layout";
+}
+
+@model RecipeBox.Models.Recipe
+
+<h2>Recipe Details</h2>
+<hr />
+<h3>@Html.DisplayNameFor(model => model.Title): @Html.DisplayFor(model => model.Title)</h3>
+
+<button class ="btn btn-alert">@Html.ActionLink("Delete Recipe", "Delete", new { id = Model.RecipeId })</button>
+<button>@Html.ActionLink("Edit Recipe", "Edit", new { id = Model.RecipeId })</button>
+
+@if(@Model.Categories.Count == 0)
+{
+  <p>This recipe does not belong to any categories!</p>
+}
+else
+{
+  <h4>Categories the recipe belongs to:</h4>
+  <ul>
+  @foreach (var join in Model.Categories)
+  {
+    <li>@join.Category.Name</li>
+    @using (Html.BeginForm("DeleteCategory", "Recipes"))
+    {
+      @Html.Hidden("joinId", @join.CategoryRecipeId)
+      <input type="submit" value="Delete"/>
+    }
+  }
+  </ul>
+}
+
+
+<button>@Html.ActionLink("Back to list", "Index")</button>
+<p>@Html.ActionLink("Add a Category", "AddCategory", new { id = Model.RecipeId })</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>

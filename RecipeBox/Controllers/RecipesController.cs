@@ -45,7 +45,71 @@ namespace RecipeBox.Controllers
         _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId= CategoryId, RecipeId = recipe.RecipeId});
       }
       _db.SaveChanges();
-      return RedirectToAction("Index")
+      return RedirectToAction("Index");
+    }
+    public ActionResult Details (int id)
+    {
+      var thisRecipe = _db.Recipes
+      .Include(recipe => recipe.Categories)
+      .ThenInlcude(join => join.Category)
+      .FirstOrDefult(recipe => recipe.RecipeId == id);
+      return View(thisRecipe);
+    }
+    public ActionResult Edit(int id)
+    {
+      var thisRecipe = _db.Items.FirstOrDefult(recipe => recipe.RecipeId == id);
+      ViewBag.CategoryId = SelectList(_db.Categories,"CategoryId", "Name");
+      return View(thisRecipe);
+    }
+    [HttpPost]
+    public ActionResult Edit(Recipe recipe, int CategoryId)
+    {
+      if (CategoryId != 0)
+      {
+        _db.CategoryRecipe.Add(new CategoryRecipe() {CategoryId = CategoryId, RecipeId = recipe.RecipeId});
+      }
+      _db.Entry(recipe).State = EntityState.Modified;
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+    public ActionResult Delete(int id)
+    {
+      var thisRecipe = _db.Recipes.FirstOrDefault(recipes => recipes.RecipeId == id);
+      return View(thisRecipe);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed(int id)
+    {
+      var thisRecipe = _db.Recipes.FirstOrDefault(recipes => recipes.RecipeId == id);
+      _db.Recipes.Remove(thisRecipe);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+    [HttpPost]
+    public ActionResult DeleteCategory(int joinId)
+    {
+      var joinEntry = _db.CategoryRecipe.FirstOrDefault(entry => entry.CategoryRecipeId == joinId);
+      _db.CategoryRecipe.Remove(joinEntry);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    public ActionResult AddCategory(int id)
+    {
+      var thisRecipe = _db.Recipes.FirstOrDefault(recipes => recipes.RecipeId == id);
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      return View(thisRecipe);
+    }
+    [HttpPost]
+    public ActionResult AddCategory(Recipe recipe, int CategoryId)
+    {
+      if (CategoryId != 0)
+      {
+        _db.CategoryRecipe.Add(new CategoryRecipe() { CategoryId = CategoryId, RecipeId = recipe.RecipeId });
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index");
     }
   }
 }
