@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RecipeBox.Models;
+using System.Linq;
 using System.Threading.Tasks;
 using RecipeBox.ViewModels;
 
