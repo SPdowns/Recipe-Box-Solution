@@ -1,18 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RecipeBox.Models;
+using System.Linq;
 using System.Threading.Tasks;
 using RecipeBox.ViewModels;
 
 namespace RecipeBox.Controllers
 {
-  public class AccountController : Controller
+  public class CategoriesController : Controller
   {
     private readonly RecipeBoxContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AccountController (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RecipeBoxContext db)
+    public CategoriesController (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RecipeBoxContext db)
     {
       _userManager = userManager;
       _signInManager = signInManager;
@@ -20,48 +22,55 @@ namespace RecipeBox.Controllers
     }
     public ActionResult Index()
     {
-      return View();
+      return View(_db.Categories.ToList());
     }
-    public IActionResult Index()
+    public ActionResult Create()
     {
       return View();
     }
+
     [HttpPost]
-    public async Task<ActionResult> Register (RegisterViewModel model)
+    public ActionResult Create(Category category)
     {
-      var user = new ApplicationUser { UserName = model.Email };
-      IdentityResult result = await _userManager.CreateAsyc(user, model.Password);
-      if (result.Succeeded)
-      {
-        return RedirectToAction("Index");
-      }
-      else
-      {
-        return View();
-      }
-    }
-    public ActionResult Login()
-    {
-      return View();
-    }
-    [HttpPost]
-    public async Task<ActionResult> LogOff()
-    {
-      await _signInManager.SignOutAsync();
+      _db.Categories.Add(category);
+      _db.SaveChanges();
       return RedirectToAction("Index");
     }
-    [HttpPost]
-    public async Task<ActionResult> Login(LoginViewModel model)
+
+    public ActionResult Details(int id)
     {
-      Microsoft.AspNetCore.Identity.SignInManager result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
-      if (result.Succeeded)
-      {
-        return RedirectToAction("Index");
-      }
-      else
-      {
-        return View();
-      }
+      var thisCategory = _db.Categories
+        .Include(category => category.Recipes)
+        .ThenInclude(join => join.Recipe)
+        .FirstOrDefault(category => category.CategoryId == id);
+      return View(thisCategory);
+    }
+    public ActionResult Edit(int id)
+    {
+      var thisCategory = _db.Categories.FirstOrDefault(category => category.CategoryId == id);
+      return View(thisCategory);
+    }
+
+    [HttpPost]
+    public ActionResult Edit(Category category)
+    {
+      _db.Entry(category).State = EntityState.Modified;
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    public ActionResult Delete(int id)
+    {
+      var thisCategory = _db.Categories.FirstOrDefault(category => category.CategoryId == id);
+      return View(thisCategory);
+    }
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed(int id)
+    {
+      var thisCategory = _db.Categories.FirstOrDefault(category => category.CategoryId == id);
+      _db.Categories.Remove(thisCategory);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
     }
   }
 }
